@@ -1,1 +1,1 @@
-print("Welcome tp AI Study Assistant")
+print("Welcome to AI Study Assistant")
