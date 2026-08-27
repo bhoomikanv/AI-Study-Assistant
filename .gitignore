@@ -1,0 +1,15 @@
+# Python temporary files
+__pycache__/
+*.py[cod]
+
+# Local environments
+.venv/
+venv/
+env/
+
+# Secrets: never upload Gemini keys or deployment credentials
+.env
+.env.*
+.streamlit/secrets.toml
+secrets.toml
+*.key
