@@ -13,24 +13,54 @@ def get_client(key):
     return genai.Client(api_key=key)
 
 
-def ask_ai(prompt, max_tokens=500):
-    """Generate structured answers and show helpful errors when Gemini is unavailable."""
+def ask_ai(prompt, max_tokens=700):
+    """Generate accurate, complete BCA-level answers."""
     quality_rules = """
-You are ByteVeda AI, a careful BCA tutor. Give the direct answer first, then explain it.
-Use clear headings, simple words, accurate examples, and bullet points when they improve learning.
-Never invent facts. If a question needs current information, say that it must be verified from an official source.
+You are ByteVeda AI, a careful and accurate BCA tutor.
+
+Rules:
+1. Give the direct answer first.
+2. Explain the concept clearly using simple BCA-level language.
+3. Prioritize correctness over speed.
+4. Never invent facts, definitions, syntax, examples, or results.
+5. If you are uncertain, clearly say so instead of guessing.
+6. For programming questions, check the code logic before answering.
+7. For exam questions, include the important points needed for a good answer.
+8. Always finish the answer completely. Do not stop in the middle of a sentence.
+9. Use headings, bullet points, and examples when useful.
+10. Keep simple questions concise and give more detail when requested.
 """
+
     try:
         response = client.models.generate_content(
-            model=MODEL, contents=f"{quality_rules}\n\n{prompt}",
-            config={"temperature": 0.25, "max_output_tokens": max_tokens},
+            model=MODEL,
+            contents=f"{quality_rules}\n\n{prompt}",
+            config={
+                "temperature": 0.15,
+                "max_output_tokens": max_tokens,
+            },
         )
-        return response.text or "I could not create an answer. Please ask the question in a different way."
+
+        text = response.text
+
+        if not text:
+            return "I could not create a complete answer. Please try asking the question again."
+
+        return text
+
     except Exception as error:
         message = str(error)
+
         if "RESOURCE_EXHAUSTED" in message or "429" in message:
-            return "### AI limit reached\nGemini has temporarily reached its request limit for this project. Please try again after the quota resets. You can still use the built-in guides on this page."
-        return "### AI is temporarily unavailable\nPlease check your internet connection and Gemini API key, then try again in a few minutes."
+            return """### AI limit reached
+
+Gemini has temporarily reached its request limit for this project.
+
+Please try again later. You can still use the built-in study guides and practice sections."""
+
+        return """### AI is temporarily unavailable
+
+Please check your internet connection and Gemini API key, then try again."""
 
 
 def read_uploaded_notes(uploaded_file):
