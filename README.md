@@ -1,1 +1,1 @@
-# AI-Study-Assistant
+# BCA-Study-Assistant
