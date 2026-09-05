@@ -303,7 +303,8 @@ if st.session_state.page == "Dashboard":
     else:
         st.caption(f"Welcome back, {st.session_state.name}.")
 
-    st.markdown("##### Choose what you want to do")
+  st.markdown("### 🚀 What do you want to do today?")
+st.caption("Choose a section below and start learning.")
 
     cards = [
         ("📚 Study", "Subjects & notes", "Subjects"),
